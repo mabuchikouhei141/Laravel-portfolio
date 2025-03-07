@@ -22,9 +22,10 @@ class ExperienceController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'position' => 'required|string|max:255', // title → position
             'company' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'location' => 'nullable|string|max:255', // location追加
             'start_date' => 'required|date',
             'end_date' => 'nullable|date',
             'current' => 'boolean',
@@ -49,9 +50,10 @@ class ExperienceController extends Controller
     public function update(Request $request, Experience $experience)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'position' => 'required|string|max:255', // title → position
             'company' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'location' => 'nullable|string|max:255', // location追加
             'start_date' => 'required|date',
             'end_date' => 'nullable|date',
             'current' => 'boolean',

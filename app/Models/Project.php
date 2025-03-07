@@ -19,7 +19,11 @@ class Project extends Model
         'featured'
     ];
     
-    // 技術をJSON配列として取得するアクセサ
+    protected $casts = [
+        'featured' => 'boolean',
+    ];
+    
+    // オプション: technologiesをJSON配列として取得するアクセサ
     public function getTechnologiesArrayAttribute()
     {
         return $this->technologies ? json_decode($this->technologies) : [];

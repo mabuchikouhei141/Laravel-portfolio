@@ -15,8 +15,8 @@ Route::get('/', [PortfolioController::class, 'index'])->name('home');
 Route::get('/about', [PortfolioController::class, 'about'])->name('about');
 Route::get('/projects', [ProjectController::class, 'index'])->name('projects');
 Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
-Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
+// Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+// Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
 // 管理画面へのアクセスルート
 Route::get('/admin', function () {
@@ -30,6 +30,12 @@ Route::get('/dashboard', function () {
 
 // 認証ユーザー用ルート - 'admin.' プレフィックスをつける
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+    //サイト設定管理ルート	
+    Route::get('/settings', [App\Http\Controllers\Admin\SiteSettingController::class, 'edit'])->name('settings.edit');
+    Route::post('/settings', [App\Http\Controllers\Admin\SiteSettingController::class, 'update'])->name('settings.update');
+    // プロフィール設定
+    Route::get('/profile-settings', [App\Http\Controllers\Admin\ProfileSettingsController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile-settings', [App\Http\Controllers\Admin\ProfileSettingsController::class, 'update'])->name('profile.update');
     // プロジェクト管理ルート
     Route::resource('projects', AdminProjectController::class);
     

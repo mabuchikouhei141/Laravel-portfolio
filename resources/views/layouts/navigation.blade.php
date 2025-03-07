@@ -18,6 +18,12 @@
                     
                     <!-- 管理者メニュー：管理者としてログインしている場合のみ表示 -->
                     @auth
+			<x-nav-link :href="route('admin.settings.edit')" :active="request()->routeIs('admin.settings.*')">
+    			    {{ __('サイト設定') }}
+			</x-nav-link>
+            <x-nav-link :href="route('admin.profile.edit')" :active="request()->routeIs('admin.profile.*')">
+                    {{ __('プロフィール設定') }}
+                    </x-nav-link>
                         <x-nav-link :href="route('admin.projects.index')" :active="request()->routeIs('admin.projects.*')">
                             {{ __('プロジェクト管理') }}
                         </x-nav-link>
@@ -98,12 +104,24 @@
             
             <!-- レスポンシブメニュー用の管理者リンク -->
             @auth
-                <x-responsive-nav-link :href="route('admin.projects.index')" :active="request()->routeIs('admin.projects.*')">
-                    {{ __('プロジェクト管理') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('admin.skills.index')" :active="request()->routeIs('admin.skills.*')">
-                    {{ __('スキル管理') }}
-                </x-responsive-nav-link>
+            <x-nav-link :href="route('admin.settings.edit')" :active="request()->routeIs('admin.settings.*')">
+    			    {{ __('サイト設定') }}
+			</x-nav-link>
+            <x-nav-link :href="route('admin.profile.edit')" :active="request()->routeIs('admin.profile.*')">
+                    {{ __('プロフィール設定') }}
+                    </x-nav-link>
+                        <x-nav-link :href="route('admin.projects.index')" :active="request()->routeIs('admin.projects.*')">
+                            {{ __('プロジェクト管理') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.skills.index')" :active="request()->routeIs('admin.skills.*')">
+                            {{ __('スキル管理') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.experiences.index')" :active="request()->routeIs('admin.experiences.*')">
+                            {{ __('職歴管理') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.education.index')" :active="request()->routeIs('admin.education.*')">
+                            {{ __('学歴管理') }}
+                        </x-nav-link>
             @endauth
             
             <!-- ポートフォリオ関連のリンク -->

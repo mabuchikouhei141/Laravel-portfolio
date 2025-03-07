@@ -24,14 +24,14 @@ class EducationController extends Controller
         $validated = $request->validate([
             'institution' => 'required|string|max:255',
             'degree' => 'nullable|string|max:255',
-            'field_of_study' => 'nullable|string|max:255',
+            'field' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date',
             'current' => 'boolean',
         ]);
 
-        // 現在も続いている場合はend_dateをnullに
+        // 現在も在学中の場合はend_dateをnullに
         if ($request->has('current') && $request->current) {
             $validated['end_date'] = null;
         }
@@ -52,14 +52,14 @@ class EducationController extends Controller
         $validated = $request->validate([
             'institution' => 'required|string|max:255',
             'degree' => 'nullable|string|max:255',
-            'field_of_study' => 'nullable|string|max:255',
+            'field' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date',
             'current' => 'boolean',
         ]);
 
-        // 現在も続いている場合はend_dateをnullに
+        // 現在も在学中の場合はend_dateをnullに
         if ($request->has('current') && $request->current) {
             $validated['end_date'] = null;
         }

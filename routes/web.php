@@ -15,8 +15,6 @@ Route::get('/', [PortfolioController::class, 'index'])->name('home');
 Route::get('/about', [PortfolioController::class, 'about'])->name('about');
 Route::get('/projects', [ProjectController::class, 'index'])->name('projects');
 Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
-// Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-// Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
 // 管理画面へのアクセスルート
 Route::get('/admin', function () {

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('experiences', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('company'); // 会社名
             $table->string('position'); // 役職/職位
             $table->date('start_date')->nullable(); // 開始日

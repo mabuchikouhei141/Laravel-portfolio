@@ -10,7 +10,11 @@ class EducationController extends Controller
 {
     public function index()
     {
-        $educations = Education::orderBy('start_date', 'desc')->get();
+        // ▼ 変更点：ログインユーザーの学歴だけを取得
+        $educations = Education::where('user_id', auth()->id())
+            ->orderBy('start_date', 'desc')
+            ->get();
+
         return view('admin.education.index', compact('educations'));
     }
 
@@ -36,6 +40,9 @@ class EducationController extends Controller
             $validated['end_date'] = null;
         }
 
+        // ▼ 変更点：作成時に user_id をセット
+        $validated['user_id'] = auth()->id();
+
         Education::create($validated);
 
         return redirect()->route('admin.education.index')
@@ -44,11 +51,21 @@ class EducationController extends Controller
 
     public function edit(Education $education)
     {
+        // ▼ 所有者チェック（他人の学歴を編集不可に）
+        if ($education->user_id !== auth()->id()) {
+            abort(403, 'Access denied');
+        }
+
         return view('admin.education.edit', compact('education'));
     }
 
     public function update(Request $request, Education $education)
     {
+        // ▼ 所有者チェック
+        if ($education->user_id !== auth()->id()) {
+            abort(403, 'Access denied');
+        }
+
         $validated = $request->validate([
             'institution' => 'required|string|max:255',
             'degree' => 'nullable|string|max:255',
@@ -72,6 +89,11 @@ class EducationController extends Controller
 
     public function destroy(Education $education)
     {
+        // ▼ 所有者チェック
+        if ($education->user_id !== auth()->id()) {
+            abort(403, 'Access denied');
+        }
+
         $education->delete();
 
         return redirect()->route('admin.education.index')

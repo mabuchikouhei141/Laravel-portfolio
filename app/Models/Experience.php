@@ -16,7 +16,8 @@ class Experience extends Model
         'location',  // location追加
         'start_date',
         'end_date',
-        'current'
+        'current',
+        'user_id',
     ];
     
     protected $casts = [
@@ -24,4 +25,9 @@ class Experience extends Model
         'end_date' => 'date',
         'current' => 'boolean',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

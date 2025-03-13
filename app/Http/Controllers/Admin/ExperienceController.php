@@ -10,7 +10,11 @@ class ExperienceController extends Controller
 {
     public function index()
     {
-        $experiences = Experience::orderBy('start_date', 'desc')->get();
+        // ▼ 変更点：ログインユーザーの職歴のみ取得
+        $experiences = Experience::where('user_id', auth()->id())
+            ->orderBy('start_date', 'desc')
+            ->get();
+
         return view('admin.experiences.index', compact('experiences'));
     }
 
@@ -22,10 +26,10 @@ class ExperienceController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'position' => 'required|string|max:255', // title → position
+            'position' => 'required|string|max:255',
             'company' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'location' => 'nullable|string|max:255', // location追加
+            'location' => 'nullable|string|max:255',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date',
             'current' => 'boolean',
@@ -36,6 +40,9 @@ class ExperienceController extends Controller
             $validated['end_date'] = null;
         }
 
+        // ▼ 変更点：作成時に user_id をセット
+        $validated['user_id'] = auth()->id();
+
         Experience::create($validated);
 
         return redirect()->route('admin.experiences.index')
@@ -44,22 +51,31 @@ class ExperienceController extends Controller
 
     public function edit(Experience $experience)
     {
+        // ▼ 所有者チェック
+        if ($experience->user_id !== auth()->id()) {
+            abort(403, 'Access denied');
+        }
+
         return view('admin.experiences.edit', compact('experience'));
     }
 
     public function update(Request $request, Experience $experience)
     {
+        // ▼ 所有者チェック
+        if ($experience->user_id !== auth()->id()) {
+            abort(403, 'Access denied');
+        }
+
         $validated = $request->validate([
-            'position' => 'required|string|max:255', // title → position
+            'position' => 'required|string|max:255',
             'company' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'location' => 'nullable|string|max:255', // location追加
+            'location' => 'nullable|string|max:255',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date',
             'current' => 'boolean',
         ]);
 
-        // 現在も続いている場合はend_dateをnullに
         if ($request->has('current') && $request->current) {
             $validated['end_date'] = null;
         }
@@ -72,6 +88,11 @@ class ExperienceController extends Controller
 
     public function destroy(Experience $experience)
     {
+        // ▼ 所有者チェック
+        if ($experience->user_id !== auth()->id()) {
+            abort(403, 'Access denied');
+        }
+
         $experience->delete();
 
         return redirect()->route('admin.experiences.index')

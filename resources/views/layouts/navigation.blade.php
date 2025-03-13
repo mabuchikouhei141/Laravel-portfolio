@@ -39,9 +39,12 @@
                     @endauth
                     
                     <!-- ポートフォリオ関連のリンク -->
-                    <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
-                        {{ __('ホーム') }}
-                    </x-nav-link>
+                    <x-nav-link
+        :href="route('public.portfolio.index', Auth::user())"
+        :active="request()->routeIs('public.portfolio.index')"
+    >
+        {{ __('公開ページ') }}
+    </x-nav-link>
                 </div>
             </div>
 
@@ -125,9 +128,12 @@
             @endauth
             
             <!-- ポートフォリオ関連のリンク -->
-            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">
-                {{ __('ホーム') }}
-            </x-responsive-nav-link>
+            <x-nav-link
+        :href="route('public.portfolio.index', Auth::user())"
+        :active="request()->routeIs('public.portfolio.index')"
+    >
+        {{ __('公開ページ') }}
+    </x-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->

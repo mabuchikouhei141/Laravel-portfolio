@@ -8,13 +8,30 @@ use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\SkillController;
 use App\Http\Controllers\Admin\ExperienceController;
 use App\Http\Controllers\Admin\EducationController;
+use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
 // 公開ページ用ルート
-Route::get('/', [PortfolioController::class, 'index'])->name('home');
-Route::get('/about', [PortfolioController::class, 'about'])->name('about');
-Route::get('/projects', [ProjectController::class, 'index'])->name('projects');
-Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
+Route::get('/', [WelcomeController::class, 'index'])->name('home');
+// ユーザー固有のポートフォリオ公開ページ用ルート
+Route::prefix('u')->group(function () {
+    // /u/{user} -> ユーザートップページ
+    Route::get('{user}', [\App\Http\Controllers\PublicPortfolioController::class, 'index'])
+         ->name('public.portfolio.index');
+
+    // /u/{user}/about
+    Route::get('{user}/about', [\App\Http\Controllers\PublicPortfolioController::class, 'about'])
+         ->name('public.portfolio.about');
+
+    // /u/{user}/projects
+    Route::get('{user}/projects', [\App\Http\Controllers\PublicPortfolioController::class, 'projects'])
+         ->name('public.portfolio.projects');
+
+    // /u/{user}/projects/{project}
+    Route::get('{user}/projects/{project}', [\App\Http\Controllers\PublicPortfolioController::class, 'projectShow'])
+         ->name('public.portfolio.projects.show');
+});
+
 
 // 管理画面へのアクセスルート
 Route::get('/admin', function () {

@@ -10,10 +10,14 @@ return new class extends Migration
     {
         Schema::create('site_settings', function (Blueprint $table) {
             $table->id();
-            $table->string('key')->unique();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('key');
+            // 複合ユニーク
+            $table->unique(['user_id','key']);
             $table->text('value')->nullable();
             $table->timestamps();
         });
+        
     }
 
     public function down()

@@ -16,7 +16,8 @@ class Project extends Model
         'url',
         'github_url',
         'technologies',
-        'featured'
+        'featured',
+        'user_id',
     ];
     
     protected $casts = [
@@ -27,5 +28,10 @@ class Project extends Model
     public function getTechnologiesArrayAttribute()
     {
         return $this->technologies ? json_decode($this->technologies) : [];
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

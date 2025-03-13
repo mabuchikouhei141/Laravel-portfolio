@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('education', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('institution'); // 学校/機関名
             $table->string('degree')->nullable(); // 学位
             $table->string('field')->nullable(); // 専攻分野

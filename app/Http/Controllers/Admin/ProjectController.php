@@ -11,7 +11,9 @@ class ProjectController extends Controller
 {
     public function index()
     {
-        $projects = Project::all();
+        // ▼ 変更点：ログインユーザーのプロジェクトだけ取得
+        $projects = Project::where('user_id', auth()->id())->get();
+
         return view('admin.projects.index', compact('projects'));
     }
 
@@ -32,6 +34,7 @@ class ProjectController extends Controller
             'featured' => 'boolean'
         ]);
 
+        // 画像保存
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('projects', 'public');
         }
@@ -42,6 +45,9 @@ class ProjectController extends Controller
             $validated['technologies'] = json_encode(array_map('trim', $technologies));
         }
 
+        // ▼ 変更点：プロジェクト作成時に user_id をセット
+        $validated['user_id'] = auth()->id();
+
         Project::create($validated);
 
         return redirect()->route('admin.projects.index')
@@ -50,11 +56,21 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
+        // ▼ 変更点：所有者チェック (他人のProjectにはアクセス禁止)
+        if ($project->user_id !== auth()->id()) {
+            abort(403, 'Access denied');
+        }
+
         return view('admin.projects.show', compact('project'));
     }
 
     public function edit(Project $project)
     {
+        // ▼ 所有者チェック
+        if ($project->user_id !== auth()->id()) {
+            abort(403, 'Access denied');
+        }
+
         // JSONを文字列に変換
         if ($project->technologies) {
             $project->technologies_string = implode(', ', json_decode($project->technologies));
@@ -65,6 +81,11 @@ class ProjectController extends Controller
 
     public function update(Request $request, Project $project)
     {
+        // ▼ 所有者チェック
+        if ($project->user_id !== auth()->id()) {
+            abort(403, 'Access denied');
+        }
+
         $validated = $request->validate([
             'title' => 'required|max:255',
             'description' => 'required',
@@ -75,8 +96,8 @@ class ProjectController extends Controller
             'featured' => 'boolean'
         ]);
 
+        // 画像更新
         if ($request->hasFile('image')) {
-            // 古い画像を削除
             if ($project->image) {
                 Storage::disk('public')->delete($project->image);
             }
@@ -97,6 +118,11 @@ class ProjectController extends Controller
 
     public function destroy(Project $project)
     {
+        // ▼ 所有者チェック
+        if ($project->user_id !== auth()->id()) {
+            abort(403, 'Access denied');
+        }
+
         // 画像を削除
         if ($project->image) {
             Storage::disk('public')->delete($project->image);

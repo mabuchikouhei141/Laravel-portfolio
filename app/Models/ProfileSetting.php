@@ -1,5 +1,6 @@
 <?php
 
+// app/Models/ProfileSetting.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,24 +16,38 @@ class ProfileSetting extends Model
         'bio', 
         'profile_image',
         'github_url',
-        'twitter_url'
+        'twitter_url',
+        'user_id',
     ];
 
     /**
-     * デフォルトのプロフィール設定を取得または作成
+     * ログインユーザー固有のプロフィール設定を取得または作成
      */
-    public static function getDefault()
+    public static function getForCurrentUser()
     {
-        $profile = self::first();
-        
+        $userId = auth()->id();
+
+        // user_id がログインユーザのレコードを取得
+        $profile = self::where('user_id', $userId)->first();
+
+        // なければ作成（デフォルト値を設定）
         if (!$profile) {
             $profile = self::create([
+                'user_id' => $userId,
                 'name' => 'あなたの名前',
                 'title' => 'ウェブ開発者 / デザイナー',
-                'bio' => "ここにあなたの自己紹介文を記載します。専門分野、経験年数、得意なことなどを書きましょう。\n\n技術的なスキルだけでなく、チームでの役割や、どのようなプロジェクトに関わりたいかなど、あなたの人となりが伝わる文章を心がけましょう。"
+                'bio' => "ここにあなたの自己紹介文を...\n",
+                // 必要に応じて github_url, twitter_url のデフォルトも設定可
             ]);
         }
-        
+
         return $profile;
     }
+
+    // オプション: ユーザーとのリレーション
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

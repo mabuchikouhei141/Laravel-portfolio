@@ -6,5 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Skill extends Model
 {
-    protected $fillable = ['name', 'level', 'category'];
+    protected $fillable = ['user_id','name', 'level', 'category'];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

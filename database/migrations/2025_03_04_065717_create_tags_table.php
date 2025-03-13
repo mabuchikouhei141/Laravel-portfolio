@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('tags', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('name'); // タグ名
             $table->string('slug')->unique(); // URLスラッグ
             $table->timestamps();
